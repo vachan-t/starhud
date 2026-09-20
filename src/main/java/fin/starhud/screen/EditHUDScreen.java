@@ -209,7 +209,7 @@ public class EditHUDScreen extends Screen {
                             isMoreOptionActivated = false;
                             selectedHUDs.clear();
 
-                            this.minecraft.setScreenAndShow(AutoConfigClient.getConfigScreen(Settings.class, this).get());
+                            this.minecraft.gui.setScreen(AutoConfigClient.getConfigScreen(Settings.class, this).get());
                         }
                 )
                 .tooltip(Tooltip.create(Component.translatable("starhud.screen.tooltip.config")))
@@ -604,7 +604,7 @@ public class EditHUDScreen extends Screen {
         if (super.mouseClicked(click, doubled))
             return true;
 
-        if (click.button() == 0) {
+        if (click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             hasMovedSincePress = false;
             dragStartX = click.x();
             dragStartY = click.y();
@@ -717,7 +717,7 @@ public class EditHUDScreen extends Screen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent click) {
-        if (click.button() == 0) {
+        if (click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (!hasMovedSincePress) {
                 // if mouse hasn't moved since clicked to release, we handle non mouse moved operation
                 dragging = false;
@@ -801,7 +801,7 @@ public class EditHUDScreen extends Screen {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent click, double deltaX, double deltaY) {
-        if (click.button() != 0) {
+        if (click.button() != InputConstants.MOUSE_BUTTON_LEFT) {
             return super.mouseDragged(click, deltaX, deltaY);
         }
 
@@ -1205,13 +1205,13 @@ public class EditHUDScreen extends Screen {
 
                 case InputConstants.KEY_R -> {
                     if (input.hasControlDown() && input.hasShiftDown()) {
-                        this.minecraft.setScreenAndShow(new ConfirmScreen(
+                        this.minecraft.gui.setScreen(new ConfirmScreen(
                                 result -> {
                                     if (result) {
                                         AutoConfig.getConfigHolder(Settings.class).resetToDefault();
                                         actionBar.setText(Component.translatable("starhud.screen.action.reset"));
                                     }
-                                    this.minecraft.setScreenAndShow(this);
+                                    this.minecraft.gui.setScreen(this);
                                 },
                                 Component.translatable("starhud.screen.dialog.reset_title"),
                                 Component.translatable("starhud.screen.dialog.reset_message")
@@ -1402,13 +1402,13 @@ public class EditHUDScreen extends Screen {
     @Override
     public void onClose() {
         if (isDirty()) {
-            this.minecraft.setScreenAndShow(new ConfirmScreen(
+            this.minecraft.gui.setScreen(new ConfirmScreen(
                     result -> {
                         if (result) {
                             revertChanges();
                             onEditHUDClose();
                         } else {
-                            this.minecraft.setScreenAndShow(this);
+                            this.minecraft.gui.setScreen(this);
                         }
                     },
                     Component.translatable("starhud.screen.dialog.discard_title"),
@@ -1427,7 +1427,7 @@ public class EditHUDScreen extends Screen {
     }
 
     public void onEditHUDClose() {
-        this.minecraft.setScreenAndShow(this.parent);
+        this.minecraft.gui.setScreen(this.parent);
     }
 
     private void updateGroupFieldFromSelectedHUD() {
